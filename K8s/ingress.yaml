@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-service
+  namespace: resume-prod
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "davrat-static-ip"
+    networking.gke.io/managed-certificates: "managed-cert-prod"
+
+spec:
+  rules:
+    - host: apiv2.sszzz.me
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            # UPDATE THIS LINE ABOVE
+            backend:
+              service:
+                name: rust-ml
+                port:
+                  number: 80
