@@ -1,11 +1,11 @@
-[![Tests](https://github.com/szheng3/rust-individual-project-2/actions/workflows/tests.yml/badge.svg)](https://github.com/szheng3/rust-individual-project-2/actions/workflows/tests.yml)
-[![Build binary release](https://github.com/szheng3/rust-individual-project-2/actions/workflows/release.yml/badge.svg)](https://github.com/szheng3/rust-individual-project-2/actions/workflows/release.yml)
-[![Clippy](https://github.com/szheng3/rust-individual-project-2/actions/workflows/lint.yml/badge.svg)](https://github.com/szheng3/rust-individual-project-2/actions/workflows/lint.yml)
-[![Rustfmt](https://github.com/szheng3/rust-individual-project-2/actions/workflows/rustfmt.yml/badge.svg)](https://github.com/szheng3/rust-individual-project-2/actions/workflows/rustfmt.yml)
-[![publish to Dockerhub](https://github.com/szheng3/rust-individual-project-2/actions/workflows/publish.yml/badge.svg)](https://github.com/szheng3/rust-individual-project-2/actions/workflows/publish.yml)
-[![Benchmark](https://github.com/szheng3/rust-individual-project-2/actions/workflows/bench.yml/badge.svg)](https://github.com/szheng3/rust-individual-project-2/actions/workflows/bench.yml)
+[![Tests](https://github.com/szheng3/rust-individual-project-3/actions/workflows/tests.yml/badge.svg)](https://github.com/szheng3/rust-individual-project-3/actions/workflows/tests.yml)
+[![Build binary release](https://github.com/szheng3/rust-individual-project-3/actions/workflows/release.yml/badge.svg)](https://github.com/szheng3/rust-individual-project-3/actions/workflows/release.yml)
+[![Clippy](https://github.com/szheng3/rust-individual-project-3/actions/workflows/lint.yml/badge.svg)](https://github.com/szheng3/rust-individual-project-3/actions/workflows/lint.yml)
+[![Rustfmt](https://github.com/szheng3/rust-individual-project-3/actions/workflows/rustfmt.yml/badge.svg)](https://github.com/szheng3/rust-individual-project-3/actions/workflows/rustfmt.yml)
+[![publish to Dockerhub](https://github.com/szheng3/rust-individual-project-3/actions/workflows/publish.yml/badge.svg)](https://github.com/szheng3/rust-individual-project-3/actions/workflows/publish.yml)
+[![Benchmark](https://github.com/szheng3/rust-individual-project-3/actions/workflows/bench.yml/badge.svg)](https://github.com/szheng3/rust-individual-project-3/actions/workflows/bench.yml)
 
-# Individual Project 2 - Rust micro-server for Text Summarization
+# Individual Project 3 - Rust micro-server for Text Summarization
 
 This project aims to build a Rust micro-server that summarizes text, based on the common task of reading and summarizing books among students. The project uses the `rust actix` and `libtorch` to run a pre-trained `hugging-face` model for summarization.
 
@@ -43,7 +43,7 @@ kubectl apply -f .
 
 ## Docker(Recommended)
 
-* This repo main branch is automatically published to Dockerhub with [CI/CD](https://github.com/szheng3/rust-individual-project-2/actions/workflows/publish.yml), you can pull the image from [here](https://hub.docker.com/repository/docker/szheng3/sz-rust-ml/general)
+* This repo main branch is automatically published to Dockerhub with [CI/CD](https://github.com/szheng3/rust-individual-project-3/actions/workflows/publish.yml), you can pull the image from [here](https://hub.docker.com/repository/docker/szheng3/sz-rust-ml/general)
 ```
 docker pull szheng3/sz-rust-ml:latest
 ```
@@ -113,7 +113,7 @@ Github Actions configured in .github/workflows
 
 
 ## GitHub releases
-The binary could be downloaded from the release pages. [release](https://github.com/szheng3/rust-individual-project-2/releases)
+The binary could be downloaded from the release pages. [release](https://github.com/szheng3/rust-individual-project-3/releases)
 
 ## Benchmark Results
 ![Benchmark](./assets/report1.png)
