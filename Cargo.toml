@@ -6,18 +6,18 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-actix-cors = "0.6.4"
-actix-web = "4.3.0"
-actix-files = "0.6.2"
+onnxruntime = "0.0.14"
 
-chrono = { version = "0.4.23", features = ["serde"] }
-env_logger = "0.10.0"
-exitfailure = "0.5.1"
-rust-bert = { git = "https://github.com/guillaume-be/rust-bert" }
-serde = { version = "1.0.152", features = ["derive"] }
-tch = "0.10.1"
-uuid = { version = "1.2.2", features = ["v4"] }
-log = "0.4.17"
+#actix-cors = "0.6.4"
+#actix-web = "4.3.0"
+#actix-files = "0.6.2"
+#
+#chrono = { version = "0.4.23", features = ["serde"] }
+#env_logger = "0.10.0"
+#exitfailure = "0.5.1"
+#serde = { version = "1.0.152", features = ["derive"] }
+#uuid = { version = "1.2.2", features = ["v4"] }
+#log = "0.4.17"
 
 [profile.release]
 opt-level = 1

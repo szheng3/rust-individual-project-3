@@ -8,7 +8,7 @@ on:
 
 env:
   DOCKER_REGISTRY: docker.io
-  DOCKER_IMAGE_NAME: sz-rust-ml
+  DOCKER_IMAGE_NAME: rust-onnx-ms
 #  DOCKER_IMAGE_TAG: ${{ env.GITHUB_SHA }}
 
 jobs:
