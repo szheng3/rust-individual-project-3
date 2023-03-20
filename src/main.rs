@@ -1,164 +1,54 @@
-// mod lib;
-// mod tests;
-//
-// use actix_web::middleware::Logger;
-// use actix_web::{get, post, App, HttpResponse, HttpServer, Responder, web};
-// use serde::Serialize;
-// use serde::Deserialize;
-// use std::sync::Once;
-// use actix_web::rt::Runtime;
-// use actix_files::Files;
-// use actix_cors::Cors;
-// use std::mem::drop;
-//
-// extern crate log;
-//
-// use log::{debug, error, log_enabled, info, Level};
-//
-// use exitfailure::ExitFailure;
-// use std::thread;
-// use rust_bert::pipelines::common::ModelType;
-// use tch::Device;
-//
-//
-// #[derive(Serialize)]
-// pub struct GenericResponse {
-//     pub status: String,
-//     pub message: String,
-// }
-//
-//
-// #[derive(Deserialize)]
-// struct Info {
-//     context: String,
-//     minlength: i64,
-//     model: ModelType,
-// }
-//
-//
-// #[get("/api/health")]
-// async fn api_health_handler() -> HttpResponse {
-//     let response_json = &GenericResponse {
-//         status: "success".to_string(),
-//         message: "Health Check".to_string(),
-//     };
-//     HttpResponse::Ok().json(response_json)
-// }
-//
-//
-// #[post("/api/summary")]
-// async fn api_summary_handler(info: web::Json<Info>) -> impl Responder {
-//     let summarization_model = lib::init_summarization_model(info.model, info.minlength);
-//     info!("init model success");
-//     let this_device = Device::cuda_if_available();
-//     match this_device {
-//         Device::Cuda(_) => info!("Using GPU"),
-//         Device::Cpu => info!("Using CPU"),
-//         _ => {}
-//     }
-//
-//
-//     let mut input = [String::new(); 1];
-//     input[0] = info.context.to_owned();
-//
-//     let _output = summarization_model.summarize(&input);
-//     let mut result = String::from(_output.join(" "));
-//     let response_json = &GenericResponse {
-//         status: "success".to_string(),
-//         message: result.to_string(),
-//     };
-//
-//     info!("Response message: {}", response_json.message);
-//
-//     HttpResponse::Ok().json(response_json)
-// }
-//
-//
-// #[actix_web::main]
-// async fn main() -> Result<(), ExitFailure> {
-//     if std::env::var_os("RUST_LOG").is_none() {
-//         std::env::set_var("RUST_LOG", "actix_web=info");
-//     }
-//     env_logger::builder()
-//         .filter_level(log::LevelFilter::Info)
-//         .init();
-//     log::info!("Server started successfully");
-//     HttpServer::new(move || {
-//         let cors = Cors::default()
-//             .allow_any_origin() // Allow requests from any origin
-//             .allowed_methods(vec!["GET", "POST", "OPTIONS"])
-//             .max_age(3600);
-//
-//
-//         App::new()
-//             // .wrap(cors) // Add the CORS middleware to the app
-//             .service(api_health_handler)
-//             .service(api_summary_handler)
-//             .service(Files::new("/", "./dist").index_file("index.html"))
-//
-//             .wrap(Logger::default())
-//     })
-//         .bind(("0.0.0.0", 8000))?
-//         .run()
-//         .await?;
-//     Ok(())
-// }
+use ndarray::s;
+use std::{
+    path::{Path, PathBuf},
+    str::FromStr,
+};
+use tokenizers::tokenizer::{Result, Tokenizer};
+use tract_onnx::prelude::*;
 
-use actix_web::{web, App, HttpResponse, HttpServer, Responder};
-use onnxruntime::{Environment, LoggingLevel};
-use serde::{Deserialize, Serialize};
-use std::sync::{Arc, Mutex};
+fn main() -> Result<()> {
+    let model_dir = PathBuf::from_str("./albert")?;
+    let tokenizer = Tokenizer::from_file(Path::join(&model_dir, "tokenizer.json"))?;
 
-#[derive(Deserialize, Serialize)]
-struct TextInput {
-    text: String,
+    let text = "Paris is the [MASK] of France.";
+
+    let tokenizer_output = tokenizer.encode(text, true)?;
+    let input_ids = tokenizer_output.get_ids();
+    let attention_mask = tokenizer_output.get_attention_mask();
+    let token_type_ids = tokenizer_output.get_type_ids();
+    let length = input_ids.len();
+    let mask_pos =
+        input_ids.iter().position(|&x| x == tokenizer.token_to_id("[MASK]").unwrap()).unwrap();
+
+    let model = tract_onnx::onnx()
+        .model_for_path(Path::join(&model_dir, "model.onnx"))?
+        .into_optimized()?
+        .into_runnable()?;
+
+    let input_ids: Tensor = tract_ndarray::Array2::from_shape_vec(
+        (1, length),
+        input_ids.iter().map(|&x| x as i64).collect(),
+    )?
+        .into();
+    let attention_mask: Tensor = tract_ndarray::Array2::from_shape_vec(
+        (1, length),
+        attention_mask.iter().map(|&x| x as i64).collect(),
+    )?
+        .into();
+    let token_type_ids: Tensor = tract_ndarray::Array2::from_shape_vec(
+        (1, length),
+        token_type_ids.iter().map(|&x| x as i64).collect(),
+    )?
+        .into();
+
+    let outputs =
+        model.run(tvec!(input_ids.into(), attention_mask.into(), token_type_ids.into()))?;
+    let logits = outputs[0].to_array_view::<f32>()?;
+    let logits = logits.slice(s![0, mask_pos, ..]);
+    let word_id = logits.iter().zip(0..).max_by(|a, b| a.0.partial_cmp(b.0).unwrap()).unwrap().1;
+    let word = tokenizer.id_to_token(word_id);
+    println!("Result: {word:?}");
+
+    Ok(())
 }
 
-#[derive(Deserialize, Serialize)]
-struct SummaryOutput {
-    summary: String,
-}
-
-async fn summarize(data: web::Data<AppState>, input: web::Json<TextInput>) -> impl Responder {
-    let summary = data
-        .summary_model
-        .lock()
-        .expect("Failed to acquire lock on summary_model")
-        .run(vec![&input.text])
-        .expect("Failed to run model");
-
-    HttpResponse::Ok().json(SummaryOutput { summary })
-}
-
-struct AppState {
-    summary_model: Arc<Mutex<onnxruntime::Session>>,
-}
-
-#[actix_web::main]
-async fn main() -> std::io::Result<()> {
-    let environment = Environment::builder()
-        .with_name("onnxruntime_env")
-        .with_log_level(LoggingLevel::Info)
-        .build()
-        .expect("Failed to create ONNX Runtime environment");
-
-    let summary_model = environment
-        .new_session_builder()?
-        .with_optimization_level(onnxruntime::GraphOptimizationLevel::All)?
-        .with_number_threads(1)?
-        .with_cuda(0)? // Use GPU 0
-        .with_model_from_file("summary_model.onnx")?;
-
-    let state = AppState {
-        summary_model: Arc::new(Mutex::new(summary_model)),
-    };
-
-    HttpServer::new(move || {
-        App::new()
-            .app_data(web::Data::new(state.clone()))
-            .service(web::resource("/summarize").route(web::post().to(summarize)))
-    })
-        .bind("127.0.0.1:8080")?
-        .run()
-        .await
-}
