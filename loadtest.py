@@ -7,7 +7,9 @@ class MyUser(HttpUser):
     @task
     def post_request(self):
         payload = {
-            "context": "scikit-learn is a free software machine learning library for the Python programming language. It features various classification, regression and clustering algorithms including support-vector m",
+            "context": "scikit-learn is a free software machine learning library for the Python programming language. "
+                       "It features various classification, "
+                       "regression and clustering algorithms including support-vector m",
             "minlength": 10,
             "model": "Bart"
         }
