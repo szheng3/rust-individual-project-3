@@ -6,7 +6,7 @@ use std::sync::Once;
 use std::thread;
 
 use ndarray::s;
-use tokenizers::tokenizer::{ Tokenizer};
+use tokenizers::tokenizer::{Tokenizer};
 use tract_onnx::prelude::*;
 
 use actix_web::rt::Runtime;
@@ -50,7 +50,7 @@ pub fn init_summarization_model(model_type: ModelType, minlength: i64) -> Summar
                 let config_resource = RemoteResource::from_pretrained(T5ConfigResources::T5_SMALL);
                 let vocab_resource = RemoteResource::from_pretrained(T5VocabResources::T5_SMALL);
                 let weights_resource = RemoteResource::from_pretrained(T5ModelResources::T5_SMALL);
-                let mut summarization_config=SummarizationConfig::new(
+                let mut summarization_config = SummarizationConfig::new(
                     ModelType::T5,
                     weights_resource,
                     config_resource,
@@ -129,11 +129,10 @@ pub fn init_summarization_model(model_type: ModelType, minlength: i64) -> Summar
 }
 
 
-pub fn main() -> Result<(), ExitFailure> {
+pub fn abert_onnx(text: &str) -> Result<(String), ExitFailure> {
     let model_dir = PathBuf::from_str("./albert")?;
     let tokenizer = Tokenizer::from_file(Path::join(&model_dir, "tokenizer.json"))?;
 
-    let text = "Paris is the [MASK] of France.";
 
     let tokenizer_output = tokenizer.encode(text, true)?;
     let input_ids = tokenizer_output.get_ids();
@@ -174,6 +173,6 @@ pub fn main() -> Result<(), ExitFailure> {
     let word = tokenizer.id_to_token(word_id);
     println!("Result: {word:?}");
 
-    Ok(())
+    Ok((word.to_string()))
 }
 
