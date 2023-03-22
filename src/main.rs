@@ -78,7 +78,7 @@ async fn api_summary_handler(info: web::Json<Info>) -> impl Responder {
 
 #[post("/api/albert")]
 async fn api_albert(info: web::Json<Info>) -> impl Responder {
-    let output=onnx::abert_onnx(info.context.to_owned());
+    let output=onnx::abert_onnx(&info.context.to_owned());
     let response_json = &GenericResponse {
         status: "success".to_string(),
         message: output.to_string(),
@@ -110,6 +110,7 @@ async fn main() -> Result<(), ExitFailure> {
         App::new()
             // .wrap(cors) // Add the CORS middleware to the app
             .service(api_health_handler)
+            .service(api_albert)
             .service(api_summary_handler)
             .service(Files::new("/", "./dist").index_file("index.html"))
 
