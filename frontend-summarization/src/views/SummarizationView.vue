@@ -43,7 +43,7 @@
                     rounded
                     v-model="textInput"
                     label="Enter text to summarize (English)"
-                    rows="17"
+                    rows="20"
                     :loading="loading"></v-textarea>
 
                 <div class="text-caption">

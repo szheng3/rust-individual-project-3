@@ -23,7 +23,7 @@ fn nlp_benchmark(c: &mut Criterion) {
     let mut inputs = black_box(
         ["ss"]
     );
-    let summarization_model = init_summarization_model(ModelType::Bart,100);
+    let summarization_model = init_summarization_model(ModelType::Bart,100,true);
 
     c.bench_function(
         "nlp algorithm",
