@@ -11,7 +11,6 @@ pub fn abert_onnx(text: &str) -> Result<String> {
     let tokenizer = Tokenizer::from_file(Path::join(&model_dir, "tokenizer.json"))?;
 
     // let text = "Paris is the [MASK] of France.";
-
     let tokenizer_output = tokenizer.encode(text, true)?;
     let input_ids = tokenizer_output.get_ids();
     let attention_mask = tokenizer_output.get_attention_mask();
