@@ -6,7 +6,7 @@ use std::{
 use tokenizers::tokenizer::{Result, Tokenizer};
 use tract_onnx::prelude::*;
 
-pub fn abert_onnx(text: &str) -> Result<Option<String>> {
+pub fn abert_onnx(text: &str) -> Result<String> {
     let model_dir = PathBuf::from_str("./albert")?;
     let tokenizer = Tokenizer::from_file(Path::join(&model_dir, "tokenizer.json"))?;
 
@@ -51,6 +51,6 @@ pub fn abert_onnx(text: &str) -> Result<Option<String>> {
     let word = tokenizer.id_to_token(word_id);
     // println!("Result: {word:?}");
 
-    Ok((word))
+    Ok((word.unwrap_or(String::from("None"))))
 }
 
