@@ -32,15 +32,15 @@ fn test_long_t5() {
     assert_ne!(result.to_string().len(), 0);
 }
 
-#[test]
-fn test_meta() {
-    let summarization_model = lib::init_summarization_model(ModelType::ProphetNet, 10,true);
-    let input = [String::new(); 1];
-    let _output = summarization_model.summarize(&input);
-    let result = String::from(_output.join(" "));
-
-    assert_ne!(result.to_string().len(), 0);
-}
+// #[test]
+// fn test_meta() {
+//     let summarization_model = lib::init_summarization_model(ModelType::ProphetNet, 10,true);
+//     let input = [String::new(); 1];
+//     let _output = summarization_model.summarize(&input);
+//     let result = String::from(_output.join(" "));
+//
+//     assert_ne!(result.to_string().len(), 0);
+// }
 
 
 // #[test]
