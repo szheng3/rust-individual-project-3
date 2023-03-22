@@ -6,11 +6,11 @@ use std::{
 use tokenizers::tokenizer::{Result, Tokenizer};
 use tract_onnx::prelude::*;
 
-pub fn abert_onnx() -> Result<> {
+pub fn abert_onnx(text:String) -> Result<> {
     let model_dir = PathBuf::from_str("./albert")?;
     let tokenizer = Tokenizer::from_file(Path::join(&model_dir, "tokenizer.json"))?;
 
-    let text = "Paris is the [MASK] of France.";
+    // let text = "Paris is the [MASK] of France.";
 
     let tokenizer_output = tokenizer.encode(text, true)?;
     let input_ids = tokenizer_output.get_ids();
