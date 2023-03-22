@@ -1,10 +1,29 @@
 <script setup lang="ts">
 import {RouterView} from 'vue-router'
 import {ref} from "vue";
+import {useRouter} from 'vue-router'
 
 const links = ref([
   'Summarization',
+  'ONNX',
 ]);
+
+const router = useRouter()
+
+const goToDashboard = (link: string) => {
+  switch (link) {
+    case 'Summarization':
+      router.push('/')
+      break;
+    case 'ONNX':
+      router.push('/onnx')
+      break;
+    default:
+      router.push('/')
+  }
+}
+
+
 </script>
 
 
@@ -17,6 +36,7 @@ const links = ref([
 
         <v-btn
             v-for="link in links"
+            @click="goToDashboard(link)"
             :key="link"
             variant="text"
         >

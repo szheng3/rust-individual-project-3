@@ -14,11 +14,8 @@ const sliderValue = ref(38);
 const isGPU = ref(true);
 const result = ref({status: 'success', message: ''});
 
-const models = ref([{name: "T5", token: 500}, {name: "Bart", token: 1000}, {
-  name: "LongT5",
-  token: 15000
-}, {name: "ProphetNet", token: 500}]);
-const defaultSelected = ref("Bart")
+const models = ref([{name: "AlBart", token: 1000}]);
+const defaultSelected = ref("AlBart")
 const selectedToken = computed(() => {
   return models.value.find((model) => model.name === defaultSelected.value).token
 })
@@ -37,12 +34,9 @@ watch(defaultSelected, async (newVal, oldVal) => {
 const requiredRule = (value) => {
 
 
-  if (!value) {
-    return 'This field is required';
+  if (!value || !value.includes('[MASK]')) {
+    return 'This field must contain the text [MASK]';
   } else {
-    // if (value.split(' ').length > 16384) {
-    //   return 'Text length should be less than 16,384 words';
-    // }
     if (value.split(' ').length > selectedToken.value) {
       return `Text length should be less than ${selectedToken.value} words`;
     }
@@ -59,11 +53,8 @@ const submitForm = async () => {
     try {
 
 
-      const response = await axios.post('/api/summary', {
+      const response = await axios.post('/api/albert', {
         context: textInput.value,
-        minlength: Math.round(sliderValue.value / 100 * textInput.value.split(' ').length),
-        model: defaultSelected.value,
-        is_gpu: isGPU.value
       });
       result.value = await response.data;
       showResult.value = true;
@@ -99,24 +90,14 @@ const submitForm = async () => {
                 v-model="defaultSelected"
                 :items="models.map((model) => model.name)"
             ></v-select>
-            <v-switch v-model="isGPU" label="GPU" inset></v-switch>
 
             <v-textarea
                 :rules="[requiredRule]"
                 rounded
                 v-model="textInput"
-                label="Enter text to summarize (English)"
-                rows="17"
+                label="Enter text to get mask value. e.g. I love [MASK]"
+                rows="20"
                 :loading="loading"></v-textarea>
-
-            <div class="text-caption">
-              Longer text will take longer to process. Output words about:
-              <strong>{{ Math.round(sliderValue / 100 * textInput.split(' ').length) }}</strong>
-            </div>
-            <v-slider v-model="sliderValue" min="0" max="100"
-                      :thumb-size="15"
-
-                      thumb-label=true></v-slider>
 
 
             <v-btn :loading="loading" type="submit" color="primary">Submit</v-btn>
