@@ -28,8 +28,13 @@ static mut SUMMARIZATION_MODEL: Option<SummarizationModel> = None;
 
 static INIT_MODEL: Once = Once::new();
 
-pub fn init_summarization_model(model_type: ModelType, minlength: i64) -> SummarizationModel {
+pub fn init_summarization_model(model_type: ModelType, minlength: i64, is_gpu: bool) -> SummarizationModel {
     let do_steps = move || -> Result<SummarizationModel, ExitFailure> {
+        let device = if is_gpu {
+            Device::cuda_if_available()
+        } else {
+            Device::Cpu
+        };
         let summarization_config = match model_type {
             ModelType::LongT5 => {
                 let config_resource = RemoteResource::from_pretrained(LongT5ConfigResources::TGLOBAL_BASE_BOOK_SUMMARY);
@@ -44,6 +49,7 @@ pub fn init_summarization_model(model_type: ModelType, minlength: i64) -> Summar
                 );
                 summarization_config.min_length = minlength;
                 summarization_config.max_length = Option::from(minlength + 30);
+                summarization_config.device = device;
                 summarization_config
             }
             ModelType::T5 => {
@@ -59,6 +65,7 @@ pub fn init_summarization_model(model_type: ModelType, minlength: i64) -> Summar
                 );
                 summarization_config.min_length = minlength;
                 summarization_config.max_length = Option::from(minlength + 30);
+                summarization_config.device = device;
                 summarization_config
             }
             ModelType::Bart => {
@@ -83,7 +90,7 @@ pub fn init_summarization_model(model_type: ModelType, minlength: i64) -> Summar
                     length_penalty: 1.0,
                     min_length: minlength,
                     max_length: Some(minlength + 30),
-                    device: Device::cuda_if_available(),
+                    device: device,
                     ..Default::default()
                 };
                 summarization_config
@@ -110,7 +117,7 @@ pub fn init_summarization_model(model_type: ModelType, minlength: i64) -> Summar
                     min_length: minlength,
                     max_length: Some(minlength + 30),
                     no_repeat_ngram_size: 3,
-                    device: Device::cuda_if_available(),
+                    device: device,
                     ..Default::default()
                 };
                 summarization_config

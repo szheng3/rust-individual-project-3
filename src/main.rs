@@ -34,6 +34,7 @@ struct Info {
     context: String,
     minlength: i64,
     model: ModelType,
+    is_gpu:bool,
 }
 
 #[derive(Deserialize)]
@@ -57,7 +58,7 @@ async fn api_health_handler() -> HttpResponse {
 
 #[post("/api/summary")]
 async fn api_summary_handler(info: web::Json<Info>) -> impl Responder {
-    let summarization_model = lib::init_summarization_model(info.model, info.minlength);
+    let summarization_model = lib::init_summarization_model(info.model, info.minlength,info.is_gpu);
     info!("init model success");
     let this_device = Device::cuda_if_available();
     match this_device {

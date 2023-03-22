@@ -36,6 +36,7 @@
                     v-model="defaultSelected"
                     :items="models.map((model) => model.name)"
                 ></v-select>
+                <v-switch v-model="isGPU" label="GPU" inset></v-switch>
 
                 <v-textarea
                     :rules="[requiredRule]"
@@ -127,11 +128,12 @@ const textInput = ref('');
 const loading = ref(false);
 const showResult = ref(false);
 const sliderValue = ref(38);
+const isGPU = ref(true);
 const result = ref({status: 'success', message: ''});
 const links = ref([
   'Summarization',
 ]);
-const models = ref([{name: "T5", values: "T5", token: 500}, {name: "Bart", values: "T5", token: 1000}]);
+const models = ref([{name: "T5", token: 500}, {name: "Bart",  token: 1000}]);
 const defaultSelected = ref("Bart")
 const selectedToken = computed(() => {
   return models.value.find((model) => model.name === defaultSelected.value).token
@@ -172,10 +174,13 @@ const submitForm = async () => {
     loading.value = true;
     try {
 
+
+
       const response = await axios.post('/api/summary', {
         context: textInput.value,
         minlength: Math.round(sliderValue.value / 100 * textInput.value.split(' ').length),
-        model: defaultSelected.value
+        model: defaultSelected.value,
+        is_gpu: isGPU.value
       });
       result.value = await response.data;
       showResult.value = true;
