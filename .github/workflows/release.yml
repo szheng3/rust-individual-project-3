@@ -1,5 +1,6 @@
 name: Build binary release
 #on: [push, pull_request]
+
 permissions:
   issues: write
 on:
