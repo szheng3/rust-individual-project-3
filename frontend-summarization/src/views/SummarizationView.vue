@@ -131,7 +131,7 @@ const result = ref({status: 'success', message: ''});
 const links = ref([
   'Summarization',
 ]);
-const models = ref([{name: "T5", token: 500}, {name: "Bart", token: 1000}]);
+const models = ref([{name: "T5", values: "T5", token: 500}, {name: "Bart", values: "T5", token: 1000}]);
 const defaultSelected = ref("Bart")
 const selectedToken = computed(() => {
   return models.value.find((model) => model.name === defaultSelected.value).token
