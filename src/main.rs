@@ -36,6 +36,12 @@ struct Info {
     model: ModelType,
 }
 
+#[derive(Deserialize)]
+struct InfoAlbert {
+    context: String,
+}
+
+
 
 
 
@@ -77,7 +83,7 @@ async fn api_summary_handler(info: web::Json<Info>) -> impl Responder {
 }
 
 #[post("/api/albert")]
-async fn api_albert(info: web::Json<Info>) -> impl Responder {
+async fn api_albert(info: web::Json<InfoAlbert>) -> impl Responder {
     let output=onnx::abert_onnx(&info.context.to_owned()).unwrap();
     let response_json = &GenericResponse {
         status: "success".to_string(),
