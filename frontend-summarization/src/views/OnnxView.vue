@@ -95,7 +95,7 @@ const submitForm = async () => {
                 :rules="[requiredRule]"
                 rounded
                 v-model="textInput"
-                label="Enter text to get mask value. e.g. I love [MASK]"
+                label="Enter text to get mask value. e.g. The goal of life is [MASK]."
                 rows="20"
                 :loading="loading"></v-textarea>
 
