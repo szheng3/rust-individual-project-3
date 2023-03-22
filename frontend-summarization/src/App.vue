@@ -1,22 +1,56 @@
 <script setup lang="ts">
-import {RouterView} from 'vue-router'</script>
+import {RouterView} from 'vue-router'
+import {ref} from "vue";
+
+const links = ref([
+  'Summarization',
+]);
+</script>
+
 
 <template>
-  <header>
-<!--    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />-->
+  <v-app>
 
-    <div class="wrapper">
-<!--      <HelloWorld msg="You did it!" />-->
+    <v-app-bar flat>
+      <v-container class="fill-height d-flex align-center">
 
-<!--      <nav>-->
-<!--        <RouterLink to="/">Home</RouterLink>-->
-<!--        <RouterLink to="/about">About</RouterLink>-->
-<!--      </nav>-->
-    </div>
-  </header>
-  <notifications class="mt-10 mr-16"/>
 
-  <RouterView />
+        <v-btn
+            v-for="link in links"
+            :key="link"
+            variant="text"
+        >
+          {{ link }}
+        </v-btn>
+
+        <v-spacer></v-spacer>
+
+      </v-container>
+    </v-app-bar>
+    <notifications class="mt-10 mr-16"/>
+
+    <v-main class="bg-grey-lighten-4">
+
+      <RouterView/>
+
+    </v-main>
+    <v-footer
+        absolute
+        class=" text-center d-flex flex-column"
+        flat
+    >
+
+      <div class="text-caption">
+        This project aims to build a Rust app that summarizes text, based on the common task of reading and
+        summarizing books among students.
+      </div>
+
+
+      <div class="text-caption">
+        {{ new Date().getFullYear() }} —<a href="https://sszzz.me">Shuai Zheng</a>
+      </div>
+    </v-footer>
+  </v-app>
 </template>
 
 <style scoped>
