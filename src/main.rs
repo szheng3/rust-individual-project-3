@@ -37,6 +37,8 @@ struct Info {
 }
 
 
+
+
 #[get("/api/health")]
 async fn api_health_handler() -> HttpResponse {
     let response_json = &GenericResponse {
@@ -74,11 +76,23 @@ async fn api_summary_handler(info: web::Json<Info>) -> impl Responder {
     HttpResponse::Ok().json(response_json)
 }
 
+#[post("/api/albert")]
+async fn api_albert(info: web::Json<Info>) -> impl Responder {
+    let output=onnx::abert_onnx(info.context.to_owned());
+    let response_json = &GenericResponse {
+        status: "success".to_string(),
+        message: output.to_string(),
+    };
+
+    info!("Response message: {}", response_json.message);
+
+    HttpResponse::Ok().json(response_json)
+}
+
 
 #[actix_web::main]
 async fn main() -> Result<(), ExitFailure> {
-    let output=onnx::abert_onnx("Paris is the [MASK] of France.");
-    println!("output: {:?}", output);
+
     if std::env::var_os("RUST_LOG").is_none() {
         std::env::set_var("RUST_LOG", "actix_web=info");
     }
