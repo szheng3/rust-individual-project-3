@@ -110,6 +110,7 @@ pub fn init_summarization_model(model_type: ModelType, minlength: i64) -> Summar
         };
 
 
+
         let summarization_model = SummarizationModel::new(summarization_config)?;
         Ok(summarization_model)
     };
