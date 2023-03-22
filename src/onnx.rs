@@ -6,7 +6,7 @@ use std::{
 use tokenizers::tokenizer::{Result, Tokenizer};
 use tract_onnx::prelude::*;
 
-pub fn abert_onnx(text: &str) -> Result<()> {
+pub fn abert_onnx(text: &str) -> Result<Option<String>> {
     let model_dir = PathBuf::from_str("./albert")?;
     let tokenizer = Tokenizer::from_file(Path::join(&model_dir, "tokenizer.json"))?;
 
@@ -49,8 +49,8 @@ pub fn abert_onnx(text: &str) -> Result<()> {
     println!("2. {:?}", logits);
     let word_id = logits.iter().zip(0..).max_by(|a, b| a.0.partial_cmp(b.0).unwrap()).unwrap().1;
     let word = tokenizer.id_to_token(word_id);
-    println!("Result: {word:?}");
+    // println!("Result: {word:?}");
 
-    Ok(())
+    Ok((word))
 }
 

@@ -77,7 +77,8 @@ async fn api_summary_handler(info: web::Json<Info>) -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> Result<(), ExitFailure> {
-    onnx::abert_onnx("Paris is the [MASK] of France.");
+    let output=onnx::abert_onnx("Paris is the [MASK] of France.");
+    println!("output: {:?}", output);
     if std::env::var_os("RUST_LOG").is_none() {
         std::env::set_var("RUST_LOG", "actix_web=info");
     }
