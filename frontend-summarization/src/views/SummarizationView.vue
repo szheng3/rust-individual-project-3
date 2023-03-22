@@ -17,7 +17,7 @@ const result = ref({status: 'success', message: ''});
 const models = ref([{name: "T5", token: 500}, {name: "Bart", token: 1000}, {
   name: "LongT5",
   token: 15000
-}, {name: "ProphetNet", token: 500}]);
+}]);
 const defaultSelected = ref("Bart")
 const selectedToken = computed(() => {
   return models.value.find((model) => model.name === defaultSelected.value).token
