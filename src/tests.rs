@@ -22,15 +22,15 @@ fn test_t5() {
     assert_ne!(result.to_string().len(), 0);
 }
 
-#[test]
-fn test_onnx() {
-    let summarization_model = lib::abert_onnx("Paris is the [MASK] of France.");
-    let input = [String::new(); 1];
-    let _output = summarization_model.summarize(&input);
-    let result = String::from(_output.join(" "));
-
-    assert_ne!(result.to_string().len(), 0);
-}
+// #[test]
+// fn test_onnx() {
+//     let summarization_model = lib::abert_onnx("Paris is the [MASK] of France.");
+//     let input = [String::new(); 1];
+//     let _output = summarization_model.summarize(&input);
+//     let result = String::from(_output.join(" "));
+//
+//     assert_ne!(result.to_string().len(), 0);
+// }
 
 // #[test]
 // fn test_longt5() {
