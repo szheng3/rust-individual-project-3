@@ -56,6 +56,21 @@ async fn api_health_handler() -> HttpResponse {
 }
 
 
+#[post("/api/albert")]
+async fn api_albert(info: web::Json<InfoAlbert>) -> impl Responder {
+    info!("request for albert");
+    let output=onnx::abert_onnx(&info.context.to_owned()).unwrap();
+    let response_json = &GenericResponse {
+        status: "success".to_string(),
+        message: output.to_string(),
+    };
+
+    info!("Response message: {}", response_json.message);
+
+    HttpResponse::Ok().json(response_json)
+}
+
+
 #[post("/api/summary")]
 async fn api_summary_handler(info: web::Json<Info>) -> impl Responder {
     let summarization_model = lib::init_summarization_model(info.model, info.minlength,info.is_gpu);
@@ -76,20 +91,6 @@ async fn api_summary_handler(info: web::Json<Info>) -> impl Responder {
     let response_json = &GenericResponse {
         status: "success".to_string(),
         message: result.to_string(),
-    };
-
-    info!("Response message: {}", response_json.message);
-
-    HttpResponse::Ok().json(response_json)
-}
-
-#[post("/api/albert")]
-async fn api_albert(info: web::Json<InfoAlbert>) -> impl Responder {
-    info!("request for albert");
-    let output=onnx::abert_onnx(&info.context.to_owned()).unwrap();
-    let response_json = &GenericResponse {
-        status: "success".to_string(),
-        message: output.to_string(),
     };
 
     info!("Response message: {}", response_json.message);

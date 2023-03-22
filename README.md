@@ -8,7 +8,7 @@
 # Individual Project 3 - Rust micro-server for Text Summarization
 
 This project aims to build a Rust micro-server that summarizes text, based on the common task of reading and summarizing books among students. The project uses the `rust actix` and `libtorch` to run a pre-trained `hugging-face` model for summarization.
-
+Compared with the Individual Project 2, this project add more functions such as onnx model with albert models, GPU support for rust-bert, etc.
 ## Project Goals/Outcomes
 
 * Develop my Rust micro-service with kubernetes
