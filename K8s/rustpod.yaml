@@ -13,39 +13,39 @@ spec:
       labels:
         app: rust-ml
     spec:
-#      nodeSelector:
-#        cloud.google.com/gke-accelerator: nvidia-tesla-t4
+      nodeSelector:
+        cloud.google.com/gke-accelerator: nvidia-tesla-t4
       containers:
         - name: rust-ml
           imagePullPolicy: Always
-          image: szheng3/sz-rust-ml:latest
+          image: szheng3/sz-rust-ml:latest-gpu
           ports:
             - containerPort: 8000
 
 #          env:
 #            - name: SPRING_ZIPKIN_BASEURL
 #              value: zipkin.istio-system.svc.cluster.local:9411
-#          readinessProbe:
-#            httpGet:
-#              path: /actuator/health/readiness
-#              port: 8000
-#            initialDelaySeconds: 60
-#            timeoutSeconds: 5
-#          livenessProbe:
-#            httpGet:
-#              path: /actuator/health/liveness
-#              port: 8000
-#            initialDelaySeconds: 130
-#            timeoutSeconds: 10
-#            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 60
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 130
+            timeoutSeconds: 10
+            failureThreshold: 10
           resources:
-#            limits:
-#              nvidia.com/gpu: "1"
+            limits:
+              nvidia.com/gpu: "1"
             requests:
               ephemeral-storage: 20Gi
               cpu: 1250m
 #              memory: 20Gi
-              memory: 10Gi
+              memory: 15Gi
 #      imagePullSecrets:
 #        - name: regcred
       affinity:
