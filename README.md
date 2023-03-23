@@ -20,7 +20,7 @@ Compared with the Individual Project 2, this project add more functions such as 
 ![image](./assets/ml.png)
 ## Demo
 * [https://apiv2.sszzz.me](https://apiv2.sszzz.me)
-  ![image](./assets/demo1.png)
+  ![image](./assets/demo2.png)
 
 
 ## Kubernetes Deployment
