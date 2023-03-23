@@ -51,6 +51,11 @@ docker pull szheng3/sz-rust-ml:latest
 ```
 docker run -d -p 8000:8000 szheng3/sz-rust-ml:latest
 ```
+* Run the docker image with GPU.
+```
+docker run -d -p 8000:8000 szheng3/sz-rust-ml:latest-gpu
+```
+
 
 ## Setup Manually
 
